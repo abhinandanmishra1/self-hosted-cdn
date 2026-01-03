@@ -1,0 +1,15 @@
+{
+  "name": "self-hosted-cdn",
+  "version": "1.0.0",
+  "description": "A self hosted cdn powered by github repository and netlify for all of your images used in your projects, no need to incude everything in assets",
+  "main": "index.js",
+  "scripts": {
+    "start": "node functions/server.js",
+    "dev": "nodemon functions/server.js",
+    "build": "echo 'No build step required'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
