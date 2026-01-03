@@ -4,7 +4,12 @@
 
 > **Why?** Avoid paying for expensive S3 buckets or complex asset management systems. Hosting images on GitHub is free, version-controlled, and when combined with Netlify, incredibly fast.
 
-![BlinkCDN Dashboard](./public/screenshot.png)
+<kbd><img width="1719" height="961" alt="Screenshot 2026-01-03 at 11 52 27 PM" src="https://github.com/user-attachments/assets/abbc41a6-5fed-4a16-aab0-080b502f63c5" /></kbd>
+
+## Demo
+https://github.com/user-attachments/assets/83fa93f8-6425-4098-9979-9e805b486965
+
+
 
 ## 🚀 Key Features
 
