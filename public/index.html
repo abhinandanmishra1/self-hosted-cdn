@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Self Hosted CDN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            display: inline-block;
+            background: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        #fileName {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .file-path-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body style="display: flex; flex-direction: column; align-items: center">
+    <div class="nav-links">
+        <a href="/">Upload Images</a>
+        <a href="/gallery">Gallery</a>
+    </div>
+    <div>
+        <h1>Self Hosted CDN</h1>
+        <form id="uploadForm">
+            <label for="file">Choose a File</label>
+            <input type="file" id="file" accept=".png,.jpg,.jpeg,.gif" required />
+            <div>
+                <input class="file-path-input" type="text" id="filePath" placeholder="Enter file name to store" />
+            </div>
+            <div id="fileName"></div>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("file");
+        const filePathInput = document.getElementById("filePath");
+        const fileNameDiv = document.getElementById("fileName");
+        const statusDiv = document.getElementById("status");
+
+        fileInput.addEventListener("change", () => {
+            const file = fileInput.files[0];
+            if (file) {
+                fileNameDiv.textContent = `Selected file: ${file.name}`;
+                filePathInput.value = file.name;
+            } else {
+                fileNameDiv.textContent = "";
+            }
+        });
+
+        document
+            .getElementById("uploadForm")
+            .addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!fileInput.files.length) {
+                    statusDiv.textContent = "Please select a file.";
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                const filePath = filePathInput.value.trim();
+                const fileName = filePath || file.name;
+                const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB limit for GitHub
+
+                if (file.size > MAX_FILE_SIZE) {
+                    alert("File is too large. Maximum size is 50MB.");
+                    return;
+                }
+
+                statusDiv.textContent = "Uploading...";
+                const reader = new FileReader();
+                reader.onload = async function () {
+                    const base64String = reader.result; // Includes the data URL prefix
+
+                    try {
+                        const response = await fetch("/upload", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                filePath: `public/images/${fileName}`, // Add appropriate path
+                                content: base64String,
+                                commitMessage: `Upload image ${fileName}`,
+                            }),
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            statusDiv.textContent = "Upload successful!";
+                            console.log("Upload successful:", result.url);
+                        } else {
+                            statusDiv.textContent = "Upload failed. Please try again.";
+                            console.error("Upload failed:", result.error);
+                        }
+                    } catch (error) {
+                        statusDiv.textContent = "Error uploading the file.";
+                        console.error("Error uploading:", error);
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            });
+    </script>
+</body>
+
+</html>
