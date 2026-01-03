@@ -93,3 +93,13 @@ This project uses **HTTP Basic Auth** (`express-basic-auth`) to protect the dash
 ---
 
 **Happy Hosting!** ⚡️
+
+## 🤝 Contributing
+
+We welcome contributions! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.
+
+---
+
+### Note on Environment Variables
+When deploying to **Netlify**, you do **not** need to set the `PORT` variable. Netlify handles port assignment automatically for serverless functions.
+
