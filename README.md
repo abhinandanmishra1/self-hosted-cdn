@@ -53,7 +53,7 @@ To allow BlinkCDN to upload images to your repository, you need a Personal Acces
 | :--- | :--- | :--- |
 | `GITHUB_TOKEN` | The PAT you generated in step 2. | `ghp_abc123...` |
 | `REPO_OWNER` | Your GitHub username. | `abhinandanmishra1` |
-| `REPO_NAME` | The name of your repo. | `self-hosted-cdn` |
+| `REPO_NAME` | The name of your repo. | `blinkcdn` |
 | `BRANCH_NAME` | The branch to commit to. | `main` |
 | `ACCESS_USERNAME` | Username for the dashboard. | `admin` |
 | `ACCESS_PASSWORD` | Password for the dashboard. | `supersecretpassword` |
@@ -99,7 +99,3 @@ This project uses **HTTP Basic Auth** (`express-basic-auth`) to protect the dash
 We welcome contributions! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 ---
-
-### Note on Environment Variables
-When deploying to **Netlify**, you do **not** need to set the `PORT` variable. Netlify handles port assignment automatically for serverless functions.
-
