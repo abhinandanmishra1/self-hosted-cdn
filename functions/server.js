@@ -4,15 +4,9 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 import serverless from 'serverless-http';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// authentication middleware
 const users = {
     [process.env.ACCESS_USERNAME]: process.env.ACCESS_PASSWORD
 };
@@ -28,7 +22,6 @@ const router = express.Router();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json({ limit: '10mb' }));
-
 app.use(express.static('public'));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -37,10 +30,6 @@ const REPO_NAME = process.env.REPO_NAME;
 const BRANCH = process.env.BRANCH_NAME || 'main';
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
-
-app.get('/dashboard', authMiddleware, (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'views', 'dashboard.html'));
-});
 
 router.post('/upload', authMiddleware, async (req, res) => {
     const { filePath, content, commitMessage } = req.body;
